@@ -1,6 +1,4 @@
-/* eslint-disable no-use-before-define */
-/* eslint-disable react-hooks/exhaustive-deps */
-import { React, useEffect } from "react";
+import { React, useEffect, useState } from "react";
 import CustomInput from "../components/CustomInput";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -8,6 +6,7 @@ import Dropzone from "react-dropzone";
 import { delImg, uploadImg } from "../features/upload/uploadSlice";
 import { toast } from "react-toastify";
 import * as yup from "yup";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import { createBlogs, resetState } from "../features/blogs/blogSlice";
@@ -20,10 +19,12 @@ let schema = yup.object().shape({
 });
 const Addblog = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [images, setImages] = useState([]);
 
   useEffect(() => {
     dispatch(getCategories());
-  }, [dispatch]);
+  }, []);
 
   const imgState = useSelector((state) => state.upload.images);
   const bCatState = useSelector((state) => state.bCategory.bCategories);
@@ -48,7 +49,7 @@ const Addblog = () => {
 
   useEffect(() => {
     formik.values.images = img;
-  }, [formik.values, img]);
+  }, [img]);
   const formik = useFormik({
     initialValues: {
       title: "",
